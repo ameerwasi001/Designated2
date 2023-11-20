@@ -1,0 +1,15 @@
+service: graphql
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-2
+  timeout: 500
+
+functions:
+  app:
+    timeout: 500
+    handler: index.handler
+    events:
+      - http: POST /query
