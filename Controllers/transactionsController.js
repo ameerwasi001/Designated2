@@ -1,3 +1,4 @@
+const RideRequest = require("../Models/rideRequestModel.js");
 const Transactions = require("../Models/transactionsModel.js");
 const User = require("../Models/userModel.js");
 const stripe = require("stripe")(`${process.env.STRIPE_SECRET_KEY}`);
@@ -249,6 +250,7 @@ exports.verifyIntent = catchAsync(async (req, res, next) => {
  
   const toUser=await User.findById(req.body.to)
   console.log("reqqqqqq>>>><<<<",toUser)
+  const _ = await RideRequest.findOneAndUpdate({ _id: req.body.requestId }, { $set: { payed: true } })
   const paymentIntent = await stripe.paymentIntents.retrieve(
     req.body.paymentId
   );

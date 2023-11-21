@@ -35,6 +35,7 @@ startLocation:{
     address: String,
     description: String,
   },
+  payed: {type: Boolean, default: false},
   status:{
     type:String,
     default:"pending"
