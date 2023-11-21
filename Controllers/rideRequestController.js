@@ -28,7 +28,7 @@ setInterval(async()=>{
 }, 2000)
 
 exports.find = catchAsync(async (req, res, next) => {
-  const rideRequest = await RideRequest.findOne({ _id: req.params.id })
+  const rideRequest = await RideRequest.findOne({ _id: req.params.id }).populate("createdBy")
 
   res.status(200).json({
     status: 200,
@@ -55,7 +55,8 @@ exports.store = (async (req, res, next) => {
   const rideRequest = await RideRequest.create({...JSON.parse(JSON.stringify(req.body)), requestedBy: req.user._id});
 // const users=await User.find({online:true,location: { $geoWithin: { $centerSphere: [[req.body.startLocation.coordinates[0], req.body.startLocation.coordinates[1]], process.env.RIDE_RADIUS] } }})
 setTimeout(async function() {
- await RideRequest.findByIdAndDelete(rideRequest._id)
+  const rideRequest2 = await RideRequest.findOne({ _id: rideRequest._id })
+  if(rideRequest2.status != "accepted") await RideRequest.findByIdAndDelete(rideRequest._id)
   console.log("Ride request  is deleted after 1 minutes.");
 }, 70000);
 res.status(200).json({
