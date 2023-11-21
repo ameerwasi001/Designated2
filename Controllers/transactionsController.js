@@ -96,8 +96,11 @@ exports.createStripeAccount = catchAsync(async (req, res, next) => {
     country: countryCode["usa"],
     type: "express",
     capabilities: {
-      card_payments: { requested: true },
+      // card_payments: { requested: true },
       transfers: { requested: true },
+    },
+    tos_acceptance: {
+      service_agreement: "recipient",
     },
     business_type: "individual",
   });
@@ -255,12 +258,14 @@ exports.verifyIntent = catchAsync(async (req, res, next) => {
     console.log("Payment succeeded:", req.body.paymentId);
     req.paid = true;
     req.body.paymentId = req.body.paymentId;
-    const transfer = await stripe.transfers.create({
-      amount: req.body.amount*100,
-      currency: 'usd',
-      destination: toUser.accountId,
-      transfer_group: 'ORDER10',
-    });
+    try {
+      const transfer = await stripe.transfers.create({
+        amount: req.body.amount*100,
+        currency: 'usd',
+        destination: toUser.accountId,
+        transfer_group: 'ORDER10',
+      });
+    } catch (e) {}
 
   //   const transactions = await Transactions.create(req.body);
   //   const user=await User.findById(req.user._id).select("+balance")
