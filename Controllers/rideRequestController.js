@@ -28,7 +28,7 @@ setInterval(async()=>{
 }, 2000)
 
 exports.find = catchAsync(async (req, res, next) => {
-  const rideRequest = await RideRequest.findOne({ _id: req.params.id }).populate("createdBy")
+  const rideRequest = await RideRequest.findOne({ _id: req.params.id }).populate("acceptedBy").populate("canceledBy").populate("requestedBy")
 
   res.status(200).json({
     status: 200,
