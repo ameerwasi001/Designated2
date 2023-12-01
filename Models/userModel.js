@@ -7,10 +7,10 @@ const TxQuery = require("../txQuery");
 const schema = {
   name: {
     type: String,
-    
+
     trim: true,
   },
-  vehicleInfo:Object,
+  vehicleInfo: Object,
   bankName: {
     type: String,
 
@@ -18,23 +18,23 @@ const schema = {
   },
   drivingFront: {
     type: String,
-default:""
-    
+    default: ""
+
   },
   drivingBack: {
     type: String,
-default:""
-    
+    default: ""
+
   },
   IDFront: {
     type: String,
-default:""
-    
+    default: ""
+
   },
   IDBack: {
     type: String,
-default:""
-    
+    default: ""
+
   },
   accountNumber: {
     type: String,
@@ -45,7 +45,7 @@ default:""
 
   email: {
     type: String,
-  
+
 
   },
   number: {
@@ -65,27 +65,27 @@ default:""
     type: String,
   },
 
- 
+
   numberVerified: {
     type: Boolean,
     default: false,
-    
+
   },
   isDriversAccountVerified: {
     type: Boolean,
     default: false,
-    
+
   },
-totalReviews:{
-  type: Number,
-  default: 0,
+  totalReviews: {
+    type: Number,
+    default: 0,
 
-},
-averageRating:{
-  type: Number,
-  default: 0,
+  },
+  averageRating: {
+    type: Number,
+    default: 0,
 
-},
+  },
   active: {
     type: Boolean,
     default: true,
@@ -106,10 +106,14 @@ averageRating:{
     default: false,
     select: false,
   },
+  isBlocked: {
+    type: Boolean,
+    default: false,
+  },
   online: {
     type: Boolean,
     default: false,
-   
+
   },
   role: {
     type: String,
@@ -165,7 +169,7 @@ averageRating:{
   },
   balance: {
     type: Number,
-    select:false,
+    select: false,
     default: 0,
   },
 

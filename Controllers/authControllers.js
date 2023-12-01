@@ -86,7 +86,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   console.log("C_id", id);
   const user = await User.findOne({ number: req.body.number });
-  if (user && user.role==req.body.role && user.numberVerified==true) {
+  if (user && user.role == req.body.role && user.numberVerified == true) {
     return res.status(400).json({
       success: false,
       status: 400,
@@ -96,35 +96,35 @@ exports.signup = catchAsync(async (req, res, next) => {
     });
   }
   let newUser
-  if(user){
-    if(user.role=="driver")
-req.body.role="driver"
+  if (user) {
+    if (user.role == "driver")
+      req.body.role = "driver"
 
-newUser = await User.findOneAndUpdate({number:req.body.number},{
-
-
-role:req.body.role,
+    newUser = await User.findOneAndUpdate({ number: req.body.number }, {
 
 
+      role: req.body.role,
 
-});
-  }else{
-   newUser = await User.create({
+
+
+    });
+  } else {
+    newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
-  role:req.body.role,
+      role: req.body.role,
       customerId: id,
-  
+
       password: req.body.password,
-  
+
       customerId: accountId,
-  
+
       ...JSON.parse(JSON.stringify(req.body)),
     });
   }
-  
 
- 
+
+
 
   await (async () => {
     const otp = Math.floor(1000 + Math.random() * 9000);
@@ -145,29 +145,29 @@ role:req.body.role,
       { new: true, runValidators: false }
     );
     console.log(otp);
-    
-      try {
-       
-        message(`Verification otp is> ${otp} `, req.body.number);
-      } catch (error) {
-        console.log(error);
-      }
-    
-     
-      res.status(200).json({
-        status: 200,
-        success: true,
-        message: "Verification Code Sent",
-        data: {},
-      });
-    
+
+    try {
+
+      message(`Verification otp is> ${otp} `, req.body.number);
+    } catch (error) {
+      console.log(error);
+    }
+
+
+    res.status(200).json({
+      status: 200,
+      success: true,
+      message: "Verification Code Sent",
+      data: {},
+    });
+
   })();
 });
 exports.login1 = catchAsync(async (req, res, next) => {
   let otp = Math.floor(1000 + Math.random() * 9000);
   // const otp=4444
-  if(req.body.number =="123456789" || req.body.number == "12345678"){
-    otp=1234
+  if (req.body.number == "123456789" || req.body.number == "12345678") {
+    otp = 1234
   }
   console.log(req.body);
   const user = await User.findOne({ number: req.body.number });
@@ -175,12 +175,12 @@ exports.login1 = catchAsync(async (req, res, next) => {
     return res.status(400).json({
       status: 400,
       success: false,
-      message:"account not exist for given number",
+      message: "account not exist for given number",
       errorType: "wrong-number",
       data: {},
     });
   }
-  if (user.verified == false && user.role=="driver" && req.body.role=="driver") {
+  if (user.verified == false && user.role == "driver" && req.body.role == "driver") {
     return res.status(400).send({
       message: "Account verification is pending",
       status: 400,
@@ -188,7 +188,7 @@ exports.login1 = catchAsync(async (req, res, next) => {
       data: {},
     });
   }
-  if ( user.role=="customer" && req.body.role=="driver") {
+  if (user.role == "customer" && req.body.role == "driver") {
     return res.status(400).send({
       message: "You're not registered as driver",
       status: 400,
@@ -196,7 +196,7 @@ exports.login1 = catchAsync(async (req, res, next) => {
       data: {},
     });
   }
-   if (!user.driverVerified && req.body.role=="driver") {
+  if (!user.driverVerified && req.body.role == "driver") {
     return res.status(400).send({
       message: "driver verification is pending",
       success: false,
@@ -204,20 +204,20 @@ exports.login1 = catchAsync(async (req, res, next) => {
       status: 400,
       data: {},
     });
-   }
+  }
   const newUser = await User.findByIdAndUpdate(
     user._id,
     { $set: { otp, otpAt: Date.now() } },
     { new: true, runValidators: false }
   );
   console.log(otp);
-  
-    try {
-      message(`Verification otp is> ${otp} `, req.body.number);
-    } catch (error) {
-      console.log(error);
-    }
- 
+
+  try {
+    message(`Verification otp is> ${otp} `, req.body.number);
+  } catch (error) {
+    console.log(error);
+  }
+
 
   console.log("end");
   res.status(200).json({
@@ -237,7 +237,7 @@ exports.sendOTP = catchAsync(async (req, res, next) => {
     return res.status(400).json({
       status: 400,
       success: false,
-      message:"account not exist for given number",
+      message: "account not exist for given number",
       errorType: "wrong-number",
       data: {},
     });
@@ -248,13 +248,13 @@ exports.sendOTP = catchAsync(async (req, res, next) => {
     { new: true, runValidators: false }
   );
   console.log(otp);
-  
-    try {
-      message(`Verification otp is> ${otp} `, req.body.number);
-    } catch (error) {
-      console.log(error);
-    }
- 
+
+  try {
+    message(`Verification otp is> ${otp} `, req.body.number);
+  } catch (error) {
+    console.log(error);
+  }
+
 
   console.log("end");
   res.status(200).json({
@@ -506,7 +506,7 @@ exports.socialLogin = catchAsync(async (req, res) => {
 
 exports.login2 = catchAsync(async (req, res, next) => {
   console.log("route hit for login");
-  const { number} = req.body;
+  const { number } = req.body;
   // check if email and password exist
   if (!number) {
     return res.status(400).send({
@@ -537,9 +537,9 @@ exports.login2 = catchAsync(async (req, res, next) => {
       data: {},
     });
   }
-   
-  if (!user.numberVerified ) {
-   await User.findByIdAndUpdate(user._id,{numberVerified:true})
+
+  if (!user.numberVerified) {
+    await User.findByIdAndUpdate(user._id, { numberVerified: true })
   }
   // if (!user.driverVerified && req.body.role=="driver") {
   //   return res.status(400).send({
@@ -550,6 +550,54 @@ exports.login2 = catchAsync(async (req, res, next) => {
   //     data: {},
   //   });
   //  }
+  // creat token from existing function .
+  creatSendToken(
+    user,
+    200,
+    "Logged In Successfully",
+    res,
+    req.body.device,
+    true
+  );
+});
+
+// ADMIN LOGIN
+exports.adminLogin = catchAsync(async (req, res, next) => {
+  console.log("route hit for login");
+  const { number } = req.body;
+  // check if email and password exist
+  if (!number) {
+    return res.status(400).send({
+      message: "please provide number",
+      status: 400,
+      success: false,
+      data: {},
+    });
+  }
+  // check if user exist and password is correct
+  const user = await User.findOne({ number })
+  // console.log(user);
+  if (!user) {
+    return res.status(400).send({
+      message: "Invalid number",
+      success: false,
+      errorType: "",
+      status: 400,
+      data: {},
+    });
+  }
+
+  if (req.body.password !== 'default') {
+    return res.status(400).send({
+      message: "Incorrect email or password",
+      errorType: "wrong-password",
+      status: 400,
+      success: false,
+      data: { user },
+    });
+    // }
+  }
+
   // creat token from existing function .
   creatSendToken(
     user,
@@ -714,10 +762,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.getAllNotifications =  catchAsync(async (req, res,next) => {
+exports.getAllNotifications = catchAsync(async (req, res, next) => {
   console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
-  console.log("uuuuuID",req.user._id);
- const notifications=await Notification.find({receiver:req.user._id}).sort({createdAt:-1})
+  console.log("uuuuuID", req.user._id);
+  const notifications = await Notification.find({ receiver: req.user._id }).sort({ createdAt: -1 })
   return res.status(200).json({
     status: 200,
     message: "get",

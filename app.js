@@ -30,6 +30,7 @@ app.use(
 app.use(express.json());
 // Routes
 app.use("/user", userRoutes);
+app.get("/", (_, res) => res.json({}));
 
 app.use("", indexRoutes);
 

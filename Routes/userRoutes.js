@@ -19,6 +19,7 @@ router.post("/sendOTP", authController.sendOTP);
 router.post("/refresh/:token", authController.refresh);
 router.post("/login1", authController.login1);
 router.post("/login2", authController.login2);
+router.post("/adminLogin", authController.adminLogin);
 
 
 router.post("/forgotPassword", authController.forgotPassword);

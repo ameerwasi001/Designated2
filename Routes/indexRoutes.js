@@ -1,10 +1,12 @@
 const express = require("express");
+const feedbackController = require("../Controllers/feedbackController.js");
 const transactionsController = require("../Controllers/transactionsController.js");
-;
 const ratingController = require("../Controllers/ratingController.js");
-;
 const rideRequestController = require("../Controllers/rideRequestController.js");
-
+const termsOfUseController = require("../Controllers/termsOfUseController.js");
+const privacyPolicyController = require("../Controllers/privacyPolicyController.js");
+const faqsController = require("../Controllers/faqsController.js");
+const aboutUsController = require("../Controllers/aboutUsController.js");
 
 
 const authController = require("../Controllers/authControllers");
@@ -83,12 +85,6 @@ router.use(authController.protect);
 
 
 
-
-
-
-
-
-
 router.get('/rideRequest', rideRequestController.index)
 router.get('/rideRequest/:id', rideRequestController.find)
 router.post('/rideRequest', rideRequestController.store)
@@ -125,6 +121,47 @@ router.get('/getLoginLink', transactionsController.getLoginLink)
 
 router.patch('/transactions/:id', transactionsController.update)
 router.delete('/transactions/:id?', transactionsController.delete)
+
+
+router.get('/fAQS', faqsController.index)
+router.get('/fAQS/:id', faqsController.find)
+router.post('/fAQS', faqsController.store)
+router.patch('/fAQS/:id', faqsController.update)
+router.delete('/fAQS/:id?', faqsController.delete)
+
+
+router.get('/privacyPolicy', privacyPolicyController.index)
+router.get('/privacyPolicy/:id', privacyPolicyController.find)
+router.post('/privacyPolicy', privacyPolicyController.store)
+router.patch('/privacyPolicy/:id', privacyPolicyController.update)
+router.delete('/privacyPolicy/:id?', privacyPolicyController.delete)
+
+
+router.get('/termsOfUse', termsOfUseController.index)
+router.get('/termsOfUse/:id', termsOfUseController.find)
+router.post('/termsOfUse', termsOfUseController.store)
+router.patch('/termsOfUse/:id', termsOfUseController.update)
+router.delete('/termsOfUse/:id?', termsOfUseController.delete)
+
+
+
+
+
+router.get('/aboutUs', aboutUsController.index)
+router.get('/aboutUs/:id', aboutUsController.find)
+router.post('/aboutUs', aboutUsController.store)
+router.patch('/aboutUs/:id', aboutUsController.update)
+router.delete('/aboutUs/:id?', aboutUsController.delete)
+
+
+
+
+
+router.get('/feedback', feedbackController.index)
+router.get('/feedback/:id', feedbackController.find)
+router.post('/feedback', feedbackController.store)
+router.patch('/feedback/:id', feedbackController.update)
+router.delete('/feedback/:id?', feedbackController.delete)
 
 
 module.exports = router

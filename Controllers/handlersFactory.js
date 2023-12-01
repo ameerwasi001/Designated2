@@ -51,7 +51,7 @@ exports.creatOne = (Model) =>
     });
   });
 
-// :::::::::::::::::::::::::::Factory function for getting/reading  data. ::::::::::::::::::::::::::::
+// ======================= Factory function for getting/reading  data.
 
 exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
@@ -59,13 +59,12 @@ exports.getOne = (Model, popOptions) =>
     if (popOptions) query = query.populate(popOptions);
     const doc = await query;
     if (!doc) {
-      return next(new AppError("No Document Found With Given Id ", 404));
+      return next(new AppErr("No Document Found With Given Id ", 404));
     }
 
     res.json({
       status: 200,
       success: true,
-
       data: {
         data: doc,
       },
@@ -82,7 +81,8 @@ exports.getAll = (Model, popOptions) =>
       .paginate();
 
     // const doc = await features.query.explain(); // here explain method is just to check indexing
-    const doc = await features.query;
+    let doc = await features.query;
+    doc = doc.reverse()
     res.json({
       status: 200,
       success: true,

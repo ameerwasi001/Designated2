@@ -125,8 +125,15 @@ exports.topScorers = catchAsync(async (req, res, next) => {
 
 exports.updateProfile = catchAsync(async (req, res) => {
   const body = JSON.parse(JSON.stringify(req.body));
-  const user = await User.findByIdAndUpdate(
-    req.user.id,
+  // const user = await User.findByIdAndUpdate(
+  //   req.user.id,
+  //   { $set: { ...body } },
+  //   { new: true }
+  // );
+  console.log(req.body.number,req.body);
+  const user = await User.findOneAndUpdate(
+    req.body.number ? { number: req.body.number } : { _id: req.user.id },
+    // { $set: { ...Object.fromEntries(Object.entries(body).filter(([k]) => k != "id")) } },
     { $set: { ...body } },
     { new: true }
   );
