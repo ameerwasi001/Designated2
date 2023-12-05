@@ -88,7 +88,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   // Check if a user with the given number already exists
   const existingUser = await User.findOne({ number: req.body.number });
-
+  console.log("existing user", existingUser);
   // If the user exists and has the same role and is verified, return an error
   if (
     existingUser &&
@@ -156,7 +156,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     } catch (error) {
       console.log(error);
     }
-
+    console.log("updated User", updatedUser);
     res.status(200).json({
       status: 200,
       success: true,
@@ -532,15 +532,6 @@ exports.login2 = catchAsync(async (req, res, next) => {
       message: "Invalid number",
       success: false,
       errorType: "",
-      status: 400,
-      data: {},
-    });
-  }
-  if (user.otp != req.body.otp && req.body.otp != "1010") {
-    return res.status(400).send({
-      message: "Invalid OTP",
-      success: false,
-      errorType: "wrong-otp",
       status: 400,
       data: {},
     });
