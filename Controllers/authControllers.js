@@ -164,7 +164,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   })();
 });
 exports.login1 = catchAsync(async (req, res, next) => {
-console.log("asif Ali???????????");
+console.log("log1");
   let otp = Math.floor(1000 + Math.random() * 9000);
   // const otp=4444
   if (req.body.number == "123456789" || req.body.number == "12345678") {
