@@ -71,7 +71,7 @@ const creatSendToken = async (
 };
 // =========SIGNUP USER=====================
 exports.signup = catchAsync(async (req, res, next) => {
-  console.log("|||||||||||||||||||||||||||||||||||||||||||")
+  console.log("|||||||||||||||||||||||||||||||||||||||||||");
   let id;
   let accountId = undefined;
   try {
@@ -95,19 +95,16 @@ exports.signup = catchAsync(async (req, res, next) => {
       data: {},
     });
   }
-  let newUser
+  let newUser;
   if (user) {
-    if (user.role == "driver")
-      req.body.role = "driver"
+    if (user.role == "driver") req.body.role = "driver";
 
-    newUser = await User.findOneAndUpdate({ number: req.body.number }, {
-
-
-      role: req.body.role,
-
-
-
-    });
+    newUser = await User.findOneAndUpdate(
+      { number: req.body.number },
+      {
+        role: req.body.role,
+      }
+    );
   } else {
     newUser = await User.create({
       name: req.body.name,
@@ -122,9 +119,6 @@ exports.signup = catchAsync(async (req, res, next) => {
       ...JSON.parse(JSON.stringify(req.body)),
     });
   }
-
-
-
 
   await (async () => {
     const otp = Math.floor(1000 + Math.random() * 9000);
@@ -147,12 +141,10 @@ exports.signup = catchAsync(async (req, res, next) => {
     console.log(otp);
 
     try {
-
       message(`Verification otp is> ${otp} `, req.body.number);
     } catch (error) {
       console.log(error);
     }
-
 
     res.status(200).json({
       status: 200,
@@ -160,14 +152,14 @@ exports.signup = catchAsync(async (req, res, next) => {
       message: "Verification Code Sent",
       data: {},
     });
-
   })();
 });
 exports.login1 = catchAsync(async (req, res, next) => {
+  console.log("log1");
   let otp = Math.floor(1000 + Math.random() * 9000);
   // const otp=4444
   if (req.body.number == "123456789" || req.body.number == "12345678") {
-    otp = 1234
+    otp = 1234;
   }
   console.log(req.body);
   const user = await User.findOne({ number: req.body.number });
@@ -180,7 +172,11 @@ exports.login1 = catchAsync(async (req, res, next) => {
       data: {},
     });
   }
-  if (user.verified == false && user.role == "driver" && req.body.role == "driver") {
+  if (
+    user.verified == false &&
+    user.role == "driver" &&
+    req.body.role == "driver"
+  ) {
     return res.status(400).send({
       message: "Account verification is pending",
       status: 400,
@@ -218,7 +214,6 @@ exports.login1 = catchAsync(async (req, res, next) => {
     console.log(error);
   }
 
-
   console.log("end");
   res.status(200).json({
     status: 200,
@@ -254,7 +249,6 @@ exports.sendOTP = catchAsync(async (req, res, next) => {
   } catch (error) {
     console.log(error);
   }
-
 
   console.log("end");
   res.status(200).json({
@@ -505,7 +499,7 @@ exports.socialLogin = catchAsync(async (req, res) => {
 });
 
 exports.login2 = catchAsync(async (req, res, next) => {
-  // console.log("route hit for login");
+  console.log("asif Ali???????????");
   const { number } = req.body;
   // check if email and password exist
   if (!number) {
@@ -517,7 +511,7 @@ exports.login2 = catchAsync(async (req, res, next) => {
     });
   }
   // check if user exist and password is correct
-  const user = await User.findOne({ number })
+  const user = await User.findOne({ number });
   // console.log(user);
   if (!user) {
     return res.status(400).send({
@@ -539,7 +533,7 @@ exports.login2 = catchAsync(async (req, res, next) => {
   }
 
   if (!user.numberVerified) {
-    await User.findByIdAndUpdate(user._id, { numberVerified: true })
+    await User.findByIdAndUpdate(user._id, { numberVerified: true });
   }
   // if (!user.driverVerified && req.body.role=="driver") {
   //   return res.status(400).send({
@@ -575,7 +569,7 @@ exports.adminLogin = catchAsync(async (req, res, next) => {
     });
   }
   // check if user exist and password is correct
-  const user = await User.findOne({ number })
+  const user = await User.findOne({ number });
   // console.log(user);
   if (!user) {
     return res.status(400).send({
@@ -587,7 +581,7 @@ exports.adminLogin = catchAsync(async (req, res, next) => {
     });
   }
 
-  if (req.body.password !== 'default') {
+  if (req.body.password !== "default") {
     return res.status(400).send({
       message: "Incorrect email or password",
       errorType: "wrong-password",
@@ -765,7 +759,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 exports.getAllNotifications = catchAsync(async (req, res, next) => {
   console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
   console.log("uuuuuID", req.user._id);
-  const notifications = await Notification.find({ receiver: req.user._id }).sort({ createdAt: -1 })
+  const notifications = await Notification.find({
+    receiver: req.user._id,
+  }).sort({ createdAt: -1 });
   return res.status(200).json({
     status: 200,
     message: "get",
