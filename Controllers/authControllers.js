@@ -164,6 +164,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   })();
 });
 exports.login1 = catchAsync(async (req, res, next) => {
+console.log("asif Ali???????????");
   let otp = Math.floor(1000 + Math.random() * 9000);
   // const otp=4444
   if (req.body.number == "123456789" || req.body.number == "12345678") {
@@ -505,7 +506,7 @@ exports.socialLogin = catchAsync(async (req, res) => {
 });
 
 exports.login2 = catchAsync(async (req, res, next) => {
-  console.log("route hit for login");
+  console.log("asif Ali???????????");
   const { number } = req.body;
   // check if email and password exist
   if (!number) {
