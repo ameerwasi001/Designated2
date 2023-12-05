@@ -505,7 +505,7 @@ exports.socialLogin = catchAsync(async (req, res) => {
 });
 
 exports.login2 = catchAsync(async (req, res, next) => {
-  console.log("route hit for login");
+  // console.log("route hit for login");
   const { number } = req.body;
   // check if email and password exist
   if (!number) {
