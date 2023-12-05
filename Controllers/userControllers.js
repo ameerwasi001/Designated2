@@ -2,8 +2,8 @@ const multer = require("multer");
 const sharp = require("sharp");
 const TxDeleter = require("../txDeleter");
 const User = require("../Models/userModel");
+const RiderResquest = require("../Models/rideRequestModel");
 const Notification = require("../Models/notificationModel");
-
 
 const RefreshToken = require("../Models/refreshTokenModel");
 const Email = require("../Utils/email");
@@ -84,8 +84,6 @@ exports.beABuddy = catchAsync(async (req, res, next) => {
   });
 });
 exports.updateMe = catchAsync(async (req, res, next) => {
- 
-
   // 3) Update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
@@ -101,13 +99,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
-
-
 exports.deleteMe = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user.id, { active: false });
+  console.log("deleteMe", req.body);
+  await RiderResquest.findByIdAndDelete(req.body.id);
+  await User.findByIdAndDelete(req.body.id);
 
   res.status(200).json({
     status: 200,
+    message:"User deleted successfully",
     success: true,
     data: {},
   });
@@ -130,7 +129,7 @@ exports.updateProfile = catchAsync(async (req, res) => {
   //   { $set: { ...body } },
   //   { new: true }
   // );
-  console.log(req.body.number,req.body);
+  console.log(req.body.number, req.body);
   const user = await User.findOneAndUpdate(
     req.body.number ? { number: req.body.number } : { _id: req.user.id },
     // { $set: { ...Object.fromEntries(Object.entries(body).filter(([k]) => k != "id")) } },

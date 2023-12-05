@@ -71,7 +71,7 @@ const creatSendToken = async (
 };
 // =========SIGNUP USER=====================
 exports.signup = catchAsync(async (req, res, next) => {
-  console.log("|||||||||||||||||||||||||||||||||||||||||||");
+  console.log("body........", req.body);
   let id;
   let accountId = undefined;
   try {
@@ -85,45 +85,54 @@ exports.signup = catchAsync(async (req, res, next) => {
   }
 
   console.log("C_id", id);
-  const user = await User.findOne({ number: req.body.number });
-  if (user && user.role == req.body.role && user.numberVerified == true) {
+
+  // Check if a user with the given number already exists
+  const existingUser = await User.findOne({ number: req.body.number });
+
+  // If the user exists and has the same role and is verified, return an error
+  if (
+    existingUser &&
+    existingUser.role === req.body.role &&
+    existingUser.numberVerified === true
+  ) {
     return res.status(400).json({
       success: false,
       status: 400,
-      message: "User with given number already exist",
+      message: "User with given number already exists",
       errorType: "number-already-exist",
       data: {},
     });
   }
+
   let newUser;
-  if (user) {
-    if (user.role == "driver") req.body.role = "driver";
+
+  // If the user exists, update the role
+  if (existingUser) {
+    if (existingUser.role == "driver") req.body.role = "driver";
 
     newUser = await User.findOneAndUpdate(
       { number: req.body.number },
       {
         role: req.body.role,
-      }
+      },
+      { new: true }
     );
   } else {
+    // If the user does not exist, create a new user
     newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
       role: req.body.role,
       customerId: id,
-
       password: req.body.password,
-
       customerId: accountId,
-
       ...JSON.parse(JSON.stringify(req.body)),
     });
   }
 
   await (async () => {
     const otp = Math.floor(1000 + Math.random() * 9000);
-    // const otp=4444
-    console.log(req.body);
+
     const user = await User.findOne({ number: req.body.number });
     if (!user) {
       return res.status(400).json({
@@ -133,11 +142,13 @@ exports.signup = catchAsync(async (req, res, next) => {
         data: {},
       });
     }
-    const newUser = await User.findOneAndUpdate(
+
+    const updatedUser = await User.findOneAndUpdate(
       { number: req.body.number },
       { $set: { otp, otpAt: Date.now() } },
       { new: true, runValidators: false }
     );
+
     console.log(otp);
 
     try {
@@ -150,16 +161,18 @@ exports.signup = catchAsync(async (req, res, next) => {
       status: 200,
       success: true,
       message: "Verification Code Sent",
-      data: {},
+      data: { user: updatedUser },
     });
   })();
 });
+
 exports.login1 = catchAsync(async (req, res, next) => {
-  console.log("log1");
+  console.log("body:", req.body);
   let otp = Math.floor(1000 + Math.random() * 9000);
   // const otp=4444
   if (req.body.number == "123456789" || req.body.number == "12345678") {
     otp = 1234;
+    console.log("otp", otp);
   }
   console.log(req.body);
   const user = await User.findOne({ number: req.body.number });
@@ -512,6 +525,7 @@ exports.login2 = catchAsync(async (req, res, next) => {
   }
   // check if user exist and password is correct
   const user = await User.findOne({ number });
+
   // console.log(user);
   if (!user) {
     return res.status(400).send({
