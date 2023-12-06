@@ -5,8 +5,6 @@ const subscriptionController = require("../Controllers/subscriptionControllers")
 
 const router = express.Router();
 
-
-
 router.post("/signup", authController.signup);
 router.post("/verify", authController.verifyEmail);
 
@@ -20,7 +18,6 @@ router.post("/refresh/:token", authController.refresh);
 router.post("/login1", authController.login1);
 router.post("/login2", authController.login2);
 router.post("/adminLogin", authController.adminLogin);
-
 
 router.post("/forgotPassword", authController.forgotPassword);
 router.patch("/resetPassword", authController.resetPassword);
@@ -42,7 +39,7 @@ router.patch(
   userController.resizeUserPhoto,
   userController.updateMe
 );
-router.post("/deleteMe/:id", userController.deleteMe);
+router.post("/deleteMe", userController.deleteMe);
 router.delete("/deleteAccount", userController.deleteAccount);
 router.patch("/updateProfile", userController.updateProfile);
 
@@ -57,6 +54,5 @@ router
   .delete(userController.deleteUser);
 router.post("/subscribePlan", subscriptionController.upgradePlan);
 router.post("/cancelSubscription", subscriptionController.cancelSubscription);
-
 
 module.exports = router;
