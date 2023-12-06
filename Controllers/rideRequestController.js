@@ -29,7 +29,9 @@ setInterval(async () => {
 
 exports.find = catchAsync(async (req, res, next) => {
   console.log("params", req.params.id);
-  const rideRequest = await RideRequest.findOne({ _id: req.params.id }).opu;
+  const rideRequest = await RideRequest.findOne({
+    _id: req.params.id,
+  }).populate("opu");
   console.log("rideRequest", rideRequest);
   res.status(200).json({
     status: 200,
