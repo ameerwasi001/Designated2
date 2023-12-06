@@ -52,9 +52,10 @@ io.sockets.on("connect", async (socket) => {
   socket.on(
     "get-inboxes",
     authenticated(async ({ user }) => {
-      const dbMessages = await Message.find({
-        $or: [{ sender: user._id }, { receiver: user._id }],
-      });
+     const dbMessages = await Message.find({
+       $or: [{ sender: user._id }, { receiver: user._id }],
+     });
+
       // console.log(2);
       const myGroups = await GroupMembers.find({
         user: user._id,
@@ -196,7 +197,6 @@ io.sockets.on("connect", async (socket) => {
         { sender: inbox, receiver: user._id },
         { seen: true }
       );
-      console.log("updated messages", updatedMessages);
       const messages = await Message.find({
         $or: [
           { sender: user._id, receiver: inbox },
