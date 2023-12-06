@@ -100,7 +100,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
-  const userId = req.params.id;
+  const userId = req.user._id;
   console.log("userid", userId);
   await RiderResquest.findByIdAndDelete({ _id: userId });
   await User.findByIdAndDelete({ _id: userId });
