@@ -100,9 +100,10 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
-  console.log("deleteMe???????", req.body);
-  await RiderResquest.findByIdAndDelete(req.body.id);
-  await User.findByIdAndDelete(req.body.id);
+  const userId = req.params.id;
+  console.log("userid", userId);
+  await RiderResquest.findByIdAndDelete({ _id: userId });
+  await User.findByIdAndDelete({ _id: userId });
 
   res.status(200).json({
     status: 200,
