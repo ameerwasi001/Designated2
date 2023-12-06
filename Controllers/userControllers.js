@@ -146,6 +146,7 @@ exports.updateProfile = catchAsync(async (req, res) => {
 });
 
 exports.deleteAccount = catchAsync(async (req, res) => {
+  console.log("Delete Account", req.body);
   await RefreshToken.remove({ user: req.user._id });
   return res.json({
     success: true,
