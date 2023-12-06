@@ -100,13 +100,13 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
-  console.log("deleteMe", req.body);
+  console.log("deleteMe???????", req.body);
   await RiderResquest.findByIdAndDelete(req.body.id);
   await User.findByIdAndDelete(req.body.id);
 
   res.status(200).json({
     status: 200,
-    message:"User deleted successfully",
+    message: "User deleted successfully",
     success: true,
     data: {},
   });
