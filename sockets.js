@@ -196,7 +196,7 @@ io.sockets.on("connect", async (socket) => {
         { sender: inbox, receiver: user._id },
         { seen: true }
       );
-
+      console.log("updated messages", updatedMessages);
       const messages = await Message.find({
         $or: [
           { sender: user._id, receiver: inbox },
@@ -206,7 +206,7 @@ io.sockets.on("connect", async (socket) => {
         .populate("sender")
         .populate("receiver")
         .sort({ createdAt: -1 });
-
+      console.log("messages get-messages:", messages);
       io.emit("messages", {
         success: true,
         message: "Messages Retrieved Successfully",
@@ -238,7 +238,7 @@ io.sockets.on("connect", async (socket) => {
           .populate("sender")
           .populate("receiver")
           .sort({ createdAt: -1 });
-
+        console.log("message sender-message:", messages);
         io.emit("messages", {
           success: true,
           message: "Messages Retrieved Successfully",
