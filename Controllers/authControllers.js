@@ -56,6 +56,7 @@ const creatSendToken = async (
     deviceToken: device.deviceToken,
   });
   const newUser = await User.findOne({ _id: user._id });
+  console.log("token", token);
   return res.status(statusCode).json({
     success: true,
     status: statusCode,
