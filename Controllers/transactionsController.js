@@ -97,14 +97,11 @@ exports.createStripeAccount = catchAsync(async (req, res, next) => {
     country: countryCode["usa"],
     type: "express",
     capabilities: {
-      // card_payments: { requested: true },
+      card_payments: { requested: true },
       transfers: { requested: true },
     },
-    tos_acceptance: {
-      service_agreement: "recipient",
-    },
     business_type: "individual",
-  });
+  });;
 
   const user = await User.findOneAndUpdate(
     // { _id: ogAccount.organizerId },
