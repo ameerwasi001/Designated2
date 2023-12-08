@@ -31,7 +31,8 @@ exports.find = catchAsync(async (req, res, next) => {
   console.log("params", req.params.id);
   const rideRequest = await RideRequest.findOne({
     _id: req.params.id,
-  }).populate("acceptedBy");
+  }).populate("acceptedBy")
+  .populate('requestedBy');
   console.log("rideRequest", rideRequest);
   res.status(200).json({
     status: 200,

@@ -214,7 +214,7 @@ io.sockets.on("connect", async (socket) => {
       });
     })
   );
-
+  
   socket.on(
     "send-message",
     authenticated(async ({ user, to, message, messageType, messageTime }) => {
@@ -249,7 +249,31 @@ io.sockets.on("connect", async (socket) => {
       }
     })
   );
+  socket.on('delete-chat', authenticated(async ({ user, inboxId }) => {
+    try {
+      // Your logic to delete the chat, for example:
+      const result = await Message.deleteMany({
+        $or: [
+          { sender: user._id, receiver: inboxId },
+          { sender: inboxId, receiver: user._id },
+        ],
+      });
 
+      // Notify clients that the chat has been deleted
+      io.emit('chat-deleted', {
+        success: true,
+        message: 'Chat Deleted Successfully',
+        data: { inboxId },
+      });
+    } catch (error) {
+      console.error('Error deleting chat:', error);
+      io.emit('chat-deleted', {
+        success: false,
+        message: 'Failed to delete chat',
+        data: { error: error.message },
+      });
+    }
+  }));
   socket.on(
     "event",
     process("evented", socket, io, async (req, res) => {
