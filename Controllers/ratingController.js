@@ -59,7 +59,14 @@ const newAverage=a/b
 console.log("newwwww",newAverage);
 
 await User.findByIdAndUpdate(to,{totalReviews:totalRatings+1, averageRating:newAverage})
-  res.status(200).json({
+const result = await Message.deleteMany({
+  $or: [
+    { sender:to, receiver: from },
+    { sender: from, receiver: to},
+  ],
+});
+console.log(result);
+res.status(200).json({
     status: 200,
     success: true,
     message: 'Rating Created Successfully',
