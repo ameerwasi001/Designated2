@@ -102,7 +102,11 @@ router.patch('/ratings/:id', ratingController.update)
 router.delete('/ratings/:id?', ratingController.delete)
 
 
-
+router.post('/createPyamentAccount', transactionsController.createPyamentAccount)
+router.post('/initiatePayout', transactionsController.initiatePayout)
+router.post('/charge', transactionsController.charge)
+router.get('/transactions/:id', transactionsController.find)
+router.post('/transactions', transactionsController.store)
 
 
 router.get('/transactions', transactionsController.index)
