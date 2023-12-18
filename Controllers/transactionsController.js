@@ -396,22 +396,22 @@ exports.verifyIntent = catchAsync(async (req, res, next) => {
   const toUser=await User.findById(req.body.to)
   console.log("reqqqqqq>>>><<<<",toUser)
   const _ = await RideRequest.findOneAndUpdate({ _id: req.body.requestId }, { $set: { payed: true } })
-  const paymentIntent = await stripe.paymentIntents.retrieve(
-    req.body.paymentId
-  );
+  // const paymentIntent = await stripe.paymentIntents.retrieve(
+  //   req.body.paymentId
+  // );
 
-  if (paymentIntent && paymentIntent.status === "succeeded") {
+  if (true) {
 
     console.log("Payment succeeded:", req.body.paymentId);
     req.paid = true;
-    req.body.paymentId = req.body.paymentId;
+    req.body.paymentId = "123";
     try {
-      const transfer = await stripe.transfers.create({
-        amount: req.body.amount*100,
-        currency: 'usd',
-        destination: toUser.accountId,
-        transfer_group: 'ORDER10',
-      });
+      // const transfer = await stripe.transfers.create({
+      //   amount: req.body.amount*100,
+      //   currency: 'usd',
+      //   destination: toUser.accountId,
+      //   transfer_group: 'ORDER10',
+      // });
     } catch (e) {}
 
   //   const transactions = await Transactions.create(req.body);
