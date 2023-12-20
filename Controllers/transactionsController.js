@@ -123,7 +123,12 @@ exports.charge = catchAsync(async (req, res) => {
   };
 
   const url = 'https://sandbox.bluesnap.com/services/2/transactions';
-  const creditCard = req.body.card
+  const creditCard = req.body.card ?? {
+    expirationYear: 2026,
+    securityCode: 837,
+    expirationMonth: '02',
+    cardNumber: '4242424242424242'
+  }
 
   const chargeResponse = await request('POST', url, {
     amount: orderData.amount,
