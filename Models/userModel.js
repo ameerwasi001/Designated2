@@ -179,6 +179,8 @@ const schema = {
   subscriptionType: { type: String, default: "not-subscribed" },
   customerId: { type: String, default: "" },
 
+  vendorId: String,
+
   createdAt: Number,
 };
 

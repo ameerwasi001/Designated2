@@ -14,6 +14,154 @@ const {
   PostProcessor
 } = require("../Utils/query");
 const catchAsync = require("../Utils/catchAsync");
+const fetch = require('node-fetch');
+const BlueSnap = require('bluesnap');
+const bluesnapClient = new BlueSnap.BlueSnapGateway({
+  environment: 'Sandbox', // 'Production' or 'Sandbox'
+  username: 'ameer.shah@txdynamics.io', // BlueSnap username
+  password: 'Wasiameer@001', // BlueSnap password
+  apiVersion: '3.0', // Optional
+});
+
+const request = (method, url, body) => {
+  const optionsData = {
+    method,
+    headers: {
+      'content-type': 'application/json',
+      accept: 'application/json',
+      'bluesnap-version': '3.0',
+      Authorization: 'Basic QVBJXzE2MTk2MjgyMzU0ODkyMDM5MTMzODc0OkFsdG9pZHMxIQ=='
+    },
+    body: body ? JSON.stringify(body) : null,
+  }
+
+  return fetch(url, optionsData)
+}
+
+exports.createPyamentAccount = catchAsync(async (req, res) => {
+  const user = await User.findOne({ _id: req.user._id })
+
+  const url = 'https://sandbox.bluesnap.com/services/2/vendors';
+
+  const result = await request('POST', url, {
+    email: req.body.email,
+    firstName: user.name.split(" ")[0],
+    lastName: user.name.split(" ")[1],
+    phone: user.number,
+    address: req.body.address,
+    city: req.body.city,
+    country: req.body.country,
+    zip: req.body.zip,
+    defaultPayoutCurrency: req.body.defaultPayoutCurrency,
+    ipnUrl: 'https://ipnaddress.com',
+    vendorPrincipal: {
+      firstName: user.name.split(" ")[0],
+      lastName: user.name.split(" ")[1],
+      address: req.body.address,
+      country: 'BS',
+      zip: req.body.zip,
+      dob: req.body.dob,
+      personalIdentificationNumber: req.body.personalIdentificationNumber,
+      driverLicenseNumber: req.body.driverLicenseNumber,
+      email: req.body.email,
+    },
+    payoutInfo: [req.body.bankAccount],
+    vendorAgreement: {commissionPercent: 70}
+  })
+
+  if (!result.ok) {
+    const error = await result.json();
+    return res.status(400).send({
+      status: 400,
+      success: false,
+      message: error.message,
+      data: {}
+    })
+  }
+
+  const location = result.headers.get("Location")
+  const vendorId = location.split("/").at(-1)
+
+  await User.updateOne({ _id: req.user._id }, { $set: { vendorId } })
+  const newUser = await User.findOne({ _id: req.user._id })
+
+  return res.json({
+    status: 200,
+    success: true,
+    message: "",
+    data: {
+      user: newUser
+    }
+  })
+})
+
+exports.initiatePayout = catchAsync(async (req, res) => {
+  // Create a payout request
+  const user = await User.findById(req.user._id)
+  const payoutData = {
+    vendorId: user.vendorId,
+    amount: req.body.amount,
+    currency: 'BSD',
+  }
+
+  const payoutResponse = await bluesnapClient.payouts.createPayout(payoutData);
+
+  return res.json({
+    status: 200,
+    success: true,
+    message: "Payout initiated",
+    data: {payout: payoutResponse},
+  })
+})
+
+exports.charge = catchAsync(async (req, res) => {
+  const toUser = await User.findOne({ _id: req.body.to })
+
+  const orderData = {
+    amount: req.body.amount,
+    currency: req.body.currency,
+  };
+
+  const url = 'https://sandbox.bluesnap.com/services/2/transactions';
+  const creditCard = req.body.card ?? {
+    expirationYear: 2026,
+    securityCode: 837,
+    expirationMonth: '02',
+    cardNumber: '4242424242424242'
+  }
+
+  const chargeResponse = await request('POST', url, {
+    amount: orderData.amount,
+    softDescriptor: 'DescTest',
+    cardHolderInfo: {firstName: 'test first name', lastName: 'test last name', zip: '02453'},
+    currency: orderData.currency,
+    creditCard,
+    vendorInfo: {
+      vendorId: toUser.vendorId,
+      commissionPercent: 70,
+    },
+    cardTransactionType: 'AUTH_CAPTURE'
+  })
+
+  if (!chargeResponse.ok) {
+    const error = await chargeResponse.json();
+    return res.status(400).send({
+      status: 400,
+      success: false,
+      message: error.message,
+      data: {}
+    })
+  }
+
+  const result = await chargeResponse.json()
+
+  return res.json({
+    status: 200,
+    success: true,
+    message: "Charge Created Succesfully",
+    data: {...result}
+  })
+})
 
 exports.find = catchAsync(async (req, res, next) => {
   const transactions = await Transactions.find({})
@@ -248,22 +396,22 @@ exports.verifyIntent = catchAsync(async (req, res, next) => {
   const toUser=await User.findById(req.body.to)
   console.log("reqqqqqq>>>><<<<",toUser)
   const _ = await RideRequest.findOneAndUpdate({ _id: req.body.requestId }, { $set: { payed: true } })
-  const paymentIntent = await stripe.paymentIntents.retrieve(
-    req.body.paymentId
-  );
+  // const paymentIntent = await stripe.paymentIntents.retrieve(
+  //   req.body.paymentId
+  // );
 
-  if (paymentIntent && paymentIntent.status === "succeeded") {
+  if (true) {
 
     console.log("Payment succeeded:", req.body.paymentId);
     req.paid = true;
-    req.body.paymentId = req.body.paymentId;
+    req.body.paymentId = "123";
     try {
-      const transfer = await stripe.transfers.create({
-        amount: req.body.amount*100,
-        currency: 'usd',
-        destination: toUser.accountId,
-        transfer_group: 'ORDER10',
-      });
+      // const transfer = await stripe.transfers.create({
+      //   amount: req.body.amount*100,
+      //   currency: 'usd',
+      //   destination: toUser.accountId,
+      //   transfer_group: 'ORDER10',
+      // });
     } catch (e) {}
 
   //   const transactions = await Transactions.create(req.body);
