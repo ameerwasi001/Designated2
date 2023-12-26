@@ -252,7 +252,7 @@ exports.sendOTP = catchAsync(async (req, res, next) => {
     });
   }
   const newUser = await User.findOneAndUpdate(
-    { email: req.body.email },
+    { number: req.body.number },
     { $set: { otp, otpAt: Date.now() } },
     { new: true, runValidators: false }
   );
