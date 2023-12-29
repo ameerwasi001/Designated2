@@ -85,7 +85,7 @@ exports.beABuddy = catchAsync(async (req, res, next) => {
 });
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 3) Update user document
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, { $set: {...req.body} }, {
     new: true,
     runValidators: true,
   });
