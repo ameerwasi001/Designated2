@@ -92,16 +92,17 @@ exports.signup = catchAsync(async (req, res, next) => {
   console.log("existing user", existingUser);
   // If the user exists and has the same role and is verified, return an error
   if (
-    existingUser &&
-    existingUser.role === req.body.role &&
-    existingUser.numberVerified === true
+    existingUser 
+    // &&
+    // existingUser.role === req.body.role &&
+    // existingUser.numberVerified === true
   ) {
     return res.status(400).json({
       success: false,
       status: 400,
       message: "User with given number already exists",
       errorType: "number-already-exist",
-      data: {},
+      data: {user: existingUser},
     });
   }
 
