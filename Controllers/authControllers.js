@@ -528,7 +528,7 @@ exports.login2 = catchAsync(async (req, res, next) => {
     });
   }
   // check if user exist and password is correct
-  await User.updateOne({ number }, { role: req.body.role })
+  await User.updateOne({ number }, { $set: { role: req.body.role } })
   const user = await User.findOne({ number });
 
   // console.log(user);
