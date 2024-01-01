@@ -187,6 +187,7 @@ exports.login1 = catchAsync(async (req, res, next) => {
       data: {},
     });
   }
+  await User.updateOne({ number: req.body.number }, { $set: { role: req.body.role } })
   // if (
   //   user.verified == false 
   //   // &&
@@ -527,6 +528,7 @@ exports.login2 = catchAsync(async (req, res, next) => {
     });
   }
   // check if user exist and password is correct
+  await User.updateOne({ number }, { role: req.body.role })
   const user = await User.findOne({ number });
 
   // console.log(user);
