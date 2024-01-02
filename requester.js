@@ -72,7 +72,7 @@ class Res {
 
     all() {
       this.callback = (err, data) => {
-        console.log("DTAs",  err)
+        console.log("err",  err)
         err ? this.io.emit("error", err) : this.io.emit(this.evName, data)
       }
       return this

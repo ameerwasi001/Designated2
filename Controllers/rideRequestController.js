@@ -311,7 +311,7 @@ exports.ratingRefresh = async (req, res) => {
     .populate("acceptedBy")
     .populate("requestedBy")
 
-  res.all().json({
+  res.status(200).all(rideRequest.acceptedBy._id).json({
     status: 200,
     success: true,
     message: "",
