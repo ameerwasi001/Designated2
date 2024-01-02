@@ -335,6 +335,11 @@ io.sockets.on("connect", async (socket) => {
   );
 
   socket.on(
+    "ratingRefresh",
+    process("ratingRefreshed", socket, io, rideRequest.ratingRefresh)
+  );
+
+  socket.on(
     "cancelRequest",
     process("canceledRequest", socket, io, rideRequest.cancelRequest)
   );

@@ -305,6 +305,19 @@ exports.calculateFare = async (req, res, next) => {
   });
 };
 
+exports.ratingRefresh = async (req, res) => {
+  const rideRequest = await RideRequest.findById(req.body.requestId)
+    .populate("acceptedBy")
+    .populate("requestedBy")
+
+  res.all().json({
+    status: 200,
+    success: true,
+    message: "",
+    data: { driver: rideRequest.acceptedBy, intendedUser: rideRequest.acceptedBy._id }
+  })
+}
+
 exports.update = catchAsync(async (req, res, next) => {
   const rideRequest = await RideRequest.findByIdAndUpdate(
     req.params.id,

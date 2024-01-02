@@ -84,7 +84,6 @@ const schema = {
   averageRating: {
     type: Number,
     default: 0,
-
   },
   active: {
     type: Boolean,
