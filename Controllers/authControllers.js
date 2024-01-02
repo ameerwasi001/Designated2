@@ -361,108 +361,16 @@ exports.login = catchAsync(async (req, res, next) => {
   console.log("route hit for login");
   const { email, password } = req.body;
   // check if email and password exist
-  if (!email || !password) {
-    return res.status(400).send({
-      message: "please provide email and password",
-      status: 400,
-      success: false,
-      data: {},
-    });
-  }
+  // if (!email || !password) {
+  //   return res.status(400).send({
+  //     message: "please provide email and password",
+  //     status: 400,
+  //     success: false,
+  //     data: {},
+  //   });
+  // }
   // check if user exist and password is correct
-  const user = await User.findOne({ email }).select("+password");
-
-  if (!user || !(await user.correctPassword(password, user.password))) {
-    return res.status(400).send({
-      message: "Incorrect email or password",
-      errorType: "wrong-password",
-      status: 400,
-      success: false,
-      data: { user },
-    });
-  }
-
-  const logedIn = await RefreshToken.findOne({
-    device: req.body.device.id,
-    user: user._id,
-  });
-  if (logedIn) {
-    await RefreshToken.remove({ user: user._id });
-  }
-  console.log(user);
-
-  if (user.verified == false) {
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    await (async () => {
-      const user = await User.findOne({ email: req.body.email });
-      if (!user) {
-        return res.status(400).json({
-          status: 400,
-          success: false,
-          errorType: "wrong-email",
-          data: {},
-        });
-      }
-      const _newUser = await User.findOneAndUpdate(
-        { email: req.body.email },
-        { $set: { otp, otpAt: Date.now() } },
-        { new: true, runValidators: false }
-      );
-      const newUser = await User.findOne({ email: req.body.email });
-      console.log(otp);
-      if (req.body.number) {
-        try {
-          message(`Verification otp is> ${otp} `, req.body.number);
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        if (!req.body.email) {
-          return res.status(400).json({
-            status: 400,
-            success: false,
-
-            data: {},
-          });
-        }
-        try {
-          await new Email(newUser, otp).sendWelcome(otp);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-
-      console.log("end");
-      res.status(400).json({
-        status: 400,
-        success: true,
-        message: "Verification Email Sent",
-        data: { user },
-      });
-    })();
-  }
-  await User.updateOne(
-    { _id: user._id },
-    {
-      deviceToken: req.body.device.id,
-    }
-  );
-  user.deviceToken = req.body.device.id;
-
-  if (user.email2FA) {
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    await User.updateOne(
-      { email: req.body.email },
-      { $set: { otp, otpAt: Date.now() } }
-    );
-    await new Email(user, otp).sendWelcome(otp);
-    return res.status(200).send({
-      success: true,
-      status: 200,
-      message: "Verification Email Sent",
-      data: {},
-    });
-  }
+  const user = await User.findOne({ email });
   // creat token from existing function .
   creatSendToken(user, 200, "Logged In Successfully", res, req.body.device);
 });
