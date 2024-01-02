@@ -306,6 +306,7 @@ exports.calculateFare = async (req, res, next) => {
 };
 
 exports.ratingRefresh = async (req, res) => {
+  console.log("RIDE REFRESH", req.body.requestId)
   const rideRequest = await RideRequest.findById(req.body.requestId)
     .populate("acceptedBy")
     .populate("requestedBy")
