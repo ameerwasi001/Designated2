@@ -139,6 +139,14 @@ const schema = {
     type: Boolean,
     default: false,
   },
+  driverProfileCompleted: {
+    type: Boolean,
+    default: false,
+  },
+  riderProfileCompleted: {
+    type: Boolean,
+    default: false,
+  },
   generalNotification: {
     type: Boolean,
     default: true,

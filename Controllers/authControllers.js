@@ -187,35 +187,37 @@ exports.login1 = catchAsync(async (req, res, next) => {
       data: {},
     });
   }
-  if (
-    user.verified == false &&
-    user.role == "driver" &&
-    req.body.role == "driver"
-  ) {
-    return res.status(400).send({
-      message: "Account verification is pending",
-      status: 400,
-      success: false,
-      data: {},
-    });
-  }
-  if (user.role == "customer" && req.body.role == "driver") {
-    return res.status(400).send({
-      message: "You're not registered as driver",
-      status: 400,
-      success: false,
-      data: {},
-    });
-  }
-  if (!user.driverVerified && req.body.role == "driver") {
-    return res.status(400).send({
-      message: "driver verification is pending",
-      success: false,
-      errorType: "",
-      status: 400,
-      data: {},
-    });
-  }
+  await User.updateOne({ number: req.body.number }, { $set: { role: req.body.role } })
+  // if (
+  //   user.verified == false 
+  //   // &&
+  //   // user.role == "driver" &&
+  //   // req.body.role == "driver"
+  // ) {
+  //   return res.status(400).send({
+  //     message: "Account verification is pending",
+  //     status: 400,
+  //     success: false,
+  //     data: {},
+  //   });
+  // }
+  // if (user.role == "customer" && req.body.role == "driver") {
+  //   return res.status(400).send({
+  //     message: "You're not registered as driver",
+  //     status: 400,
+  //     success: false,
+  //     data: {},
+  //   });
+  // }
+  // if (!user.driverVerified && req.body.role == "driver") {
+  //   return res.status(400).send({
+  //     message: "driver verification is pending",
+  //     success: false,
+  //     errorType: "",
+  //     status: 400,
+  //     data: {},
+  //   });
+  // }
   const newUser = await User.findByIdAndUpdate(
     user._id,
     { $set: { otp, otpAt: Date.now() } },
@@ -434,6 +436,7 @@ exports.login2 = catchAsync(async (req, res, next) => {
     });
   }
   // check if user exist and password is correct
+  await User.updateOne({ number }, { $set: { role: req.body.role } })
   const user = await User.findOne({ number });
 
   // console.log(user);
