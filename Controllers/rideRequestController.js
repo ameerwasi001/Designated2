@@ -315,7 +315,14 @@ exports.ratingRefresh = async (req, res) => {
     status: 200,
     success: true,
     message: "",
-    data: { driver: rideRequest.acceptedBy, intendedUser: rideRequest.acceptedBy._id }
+    data: { driver: rideRequest.acceptedBy, rider: rideRequest.requestedBy, intendedUser: rideRequest.acceptedBy._id }
+  })
+
+  res.status(200).all(rideRequest.requestedBy._id).json({
+    status: 200,
+    success: true,
+    message: "",
+    data: { driver: rideRequest.acceptedBy, rider: rideRequest.requestedBy, intendedUser: rideRequest.requestedBy._id }
   })
 }
 
