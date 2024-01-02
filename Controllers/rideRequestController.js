@@ -159,21 +159,21 @@ exports.acceptRequest = async (req, res, next) => {
     message: "accepted",
     data: {},
   });
-  res.to(req.user._id).status(200).json({
+  res.all(req.user._id).status(200).json({
     status: 400,
     success: true,
     message: "accepted",
-    data: {},
+    data: { intendedUser: req.user._id },
   });
   console.log("customerrr>", request.requestedBy.toString());
   res
-    .to(request.requestedBy.toString())
+    .all(request.requestedBy.toString())
     .status(200)
     .json({
       status: 200,
       success: true,
       message: "Request accepted",
-      data: { request: updatedRequest },
+      data: { request: updatedRequest, intendedUser: request.requestedBy.toString() },
     });
 };
 
