@@ -183,6 +183,7 @@ exports.nearByRequests = async (req, res, next) => {
     const user = await User.findById(req.user._id);
     const requests = await RideRequest.find({
       status: "pending",
+      rideType: user.vehicleInfo.vehicleType,
       startLocation: {
         $geoWithin: {
           $centerSphere: [

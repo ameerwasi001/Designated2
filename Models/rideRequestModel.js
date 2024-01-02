@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const TxQuery = require("../txQuery");
 
 const structure = {
+  rideType: {type: String, default: 'Disinge Black'},
   startLocation: {
     type: { type: String, default: "point" },
     coordinates: [Number],
