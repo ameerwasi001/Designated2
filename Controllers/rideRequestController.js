@@ -410,7 +410,7 @@ exports.cancelRequest = async (req, res, next) => {
     message: "canceled",
     data: { request: updatedRequest },
   });
-  res
+  if(request.acceptedBy) res
     .all(request.acceptedBy.toString())
     .status(200)
     .json({

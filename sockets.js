@@ -344,6 +344,10 @@ io.sockets.on("connect", async (socket) => {
     process("canceledRequest", socket, io, rideRequest.cancelRequest)
   );
   socket.on(
+    "cancelPendingRequest",
+    process("canceledPendingRequest", socket, io, rideRequest.cancelRequest)
+  );
+  socket.on(
     "amountReceive",
     process("amountReceived", socket, io, rideRequest.paymentReceived)
   );
