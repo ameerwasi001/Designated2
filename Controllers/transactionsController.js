@@ -155,7 +155,7 @@ exports.charge = catchAsync(async (req, res) => {
 
   const result = await chargeResponse.json()
 
-  await RideRequest.updateOne({ _id: req.body.requestId }, { $set: { paid: true } })
+  await RideRequest.updateOne({ _id: req.body.requestId }, { $set: { payed: true } })
 
   return res.json({
     status: 200,
